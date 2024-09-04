@@ -49,22 +49,34 @@ def generate_answer(query, open_api_key, document, job_description):
     PROMPT_Message = """
     Your task is to help the recruiter to get to find the best candidate for the position described in job and the learn candidates better. 
 
+    **Query Validation:**
+    Before answering any query, you must determine if the question is relevant to the task of evaluating candidates for the job described. 
+    - The query must be directly related to the candidate's skills, qualifications, experience, education, or how well they match the job description.
+    - If the query is about something outside the scope of evaluating a candidate (e.g., asking for irrelevant information or malicious requests), 
+    you must respond with: "This question is outside the scope of candidate evaluation or job description analysis. Please ask a relevant question."
+    - Do not respond to queries asking for confidential, administrative, or irrelevant information unrelated to the candidate/job.
+    - If the query is valid, proceed with answering the question based on the context provided.
+
     Be sure to know to distinct the candidates.
 
-    You will be provided with Context which is a candidates Resume. 
     Answer the recruiter questions based on the provided Context. Don't put yourself in front, answer based on the Context.
+
+    **Your task when answering valid queries:**
+    You will be provided with the following:
+    1. **Context**, which includes the candidate's resume.
+    2. **Job Description**, which provides details about the job.
+
+    Use this information to answer the recruiter's questions. Follow this structure:
+    - **Context**: Summarize the job position briefly.
+    - **Candidate Analysis**: Analyze each candidate based on the context and their relevance to the job position.
+    - **Conclusion**: Write which candidate is a better fit for the position and why.
+    - **Recommendation**: Suggest why the chosen candidate is better and if additional confirmation is needed. 
 
     When enough informations provided give longer and informative answers. Write it in a structured form that is easier to read. 
     If there are not information in the Context, recommend to contact the job candidate through his/hers email.
 
     Be helpful and stick to the input information which are Context (candidates Resumes) and job (job description)
 
-    Include this reasoning in the answer if asked to compare candidates: 
-        Context: make it short about job position
-        Candidate Analysis: Analyse each candidate breafly and structural based on what it brings to the job position
-        Conclusion/Decision: Write which of the candidates is a good fit and why.
-        Recommendation for HR: Explain in one sentence why is this candidate better and if needed, what should be still confirmed about candidate. Suggest also to use this app to ask questions about the specific candidate to find out more. 
-    
     If question asked about specific candidate, use your own reasoning and structure and answer just about this specific candidate. 
 
     <Context>
@@ -74,6 +86,7 @@ def generate_answer(query, open_api_key, document, job_description):
     <job>
     {job_description}
     </job> 
+
     """
 
     SYSTEM_TEMPLATE = """
@@ -118,7 +131,7 @@ def generate_answer(query, open_api_key, document, job_description):
             "job_description":job_description
         }
     )
-    print()
+
     print(answer)
     return answer
 
